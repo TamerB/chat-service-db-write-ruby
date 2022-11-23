@@ -57,12 +57,7 @@ class RabbitMqServer < ApplicationController
                 return {data: 'unprocessed entity', status: 422}
             end
         when 'chat.create'
-            puts "22222222222222222"
-            puts value
             application = Application.find(value['params'])
-            puts "11111111111"
-            puts application
-            puts application.token
             chat = Chat.new(token: application.token)
             if chat.save
                 return {data: chat, status: 201}
@@ -70,11 +65,20 @@ class RabbitMqServer < ApplicationController
                 return {data: 'token is required', status: 400}
             end
         when 'message.create'
-            @application = Application.new(value[:params])
-            if @application.save
-                return {data: @application, status: 201}
+            puts "22222222222222222"
+            puts value
+            chat = Chat.where(token: value['params']['application_token'], number: value['params']['chat_number']).first
+            puts "11111111111"
+            puts chat
+            if chat.nil?
+                return {data: "not found", status: 404}
             else
-                return {data: 'name is required', status: 400}
+                message = Message.new(token: chat.token, chat_number: chat.number, body: value['params']['body'])
+                if message.save
+                    return {data: message, status: 201}
+                else
+                    return {data: 'one or more required field is missing', status: 400}
+                end
             end
         when 'message.update'
             @application = Application.new(value[:params])
