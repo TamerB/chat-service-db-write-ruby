@@ -65,11 +65,7 @@ class RabbitMqServer < ApplicationController
                 return {data: 'token is required', status: 400}
             end
         when 'message.create'
-            puts "22222222222222222"
-            puts value
             chat = Chat.where(token: value['params']['application_token'], number: value['params']['chat_number']).first
-            puts "11111111111"
-            puts chat
             if chat.nil?
                 return {data: "not found", status: 404}
             else
