@@ -15,7 +15,7 @@ worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
-port ENV.fetch("PORT") { 3000 }
+port ENV.fetch("WRITER_PORT") { 3000 }
 
 # Specifies the `environment` that Puma will run in.
 #
@@ -41,3 +41,16 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+$connection = Bunny.new
+$connection.start
+$channel = $connection.create_channel
+
+begin
+    server = RabbitMqServer.new
+    puts ' [x] Awaiting RPC requests'
+    server.start('write_queue')
+    server.loop_forever
+rescue Interrupt => _
+    server.stop
+end
