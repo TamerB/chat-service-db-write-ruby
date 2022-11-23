@@ -43,25 +43,31 @@ class RabbitMqServer < ApplicationController
     def forward_action(value)
         case value['action']
         when 'application.create'
-            @application = Application.new(value['params'])
-            if @application.save
-                return {data: @application, status: 201}
+            application = Application.new(value['params'])
+            if application.save
+                return {data: application, status: 201}
             else
                 return {data: 'name is required', status: 400}
             end
         when 'application.update'
-            @application = Application.find(value['params']['token'])
-            if @application.update(value['params']['application'])
-                return {data: @application, status: 200}
+            application = Application.find(value['params']['token'])
+            if application.update(value['params']['application'])
+                return {data: application, status: 200}
             else
                 return {data: 'unprocessed entity', status: 422}
             end
         when 'chat.create'
-            @application = Application.new(value[:params])
-            if @application.save
-                return {data: @application, status: 201}
+            puts "22222222222222222"
+            puts value
+            application = Application.find(value['params'])
+            puts "11111111111"
+            puts application
+            puts application.token
+            chat = Chat.new(token: application.token)
+            if chat.save
+                return {data: chat, status: 201}
             else
-                return {data: 'name is required', status: 400}
+                return {data: 'token is required', status: 400}
             end
         when 'message.create'
             @application = Application.new(value[:params])
@@ -78,8 +84,7 @@ class RabbitMqServer < ApplicationController
                 return {data: 'name is required', status: 400}
             end
         else
-            puts 'value unrecognized'
-            puts value
+            return {data: 'unrecognized operation', status: 400}
         end
     end
 end

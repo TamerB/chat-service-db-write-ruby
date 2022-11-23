@@ -2,5 +2,5 @@
 
 one:
   token: abcdef
-  name: MyString
-  chats_number: 1
+  number: 1
+  messages_number: 1
