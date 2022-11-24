@@ -77,11 +77,11 @@ class RabbitMqServer < ApplicationController
                 end
             end
         when 'message.update'
-            @application = Application.new(value[:params])
-            if @application.save
-                return {data: @application, status: 201}
+            message = Message.where(token: value['params']['application_token'], chat_number: value['params']['chat_number'], number: value['params']['number']).first
+            if message.update(value['params']['message'])
+                return {data: message, status: 200}
             else
-                return {data: 'name is required', status: 400}
+                return {data: 'unprocessed entity', status: 422}
             end
         else
             return {data: 'unrecognized operation', status: 400}
