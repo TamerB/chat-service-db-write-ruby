@@ -11,14 +11,14 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_11_23_220946) do
-  create_table "applications", primary_key: "token", id: :string, charset: "utf8mb4", force: :cascade do |t|
+  create_table "applications", primary_key: "token", id: :string, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "chats_number", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "chats", primary_key: ["token", "number"], charset: "utf8mb4", force: :cascade do |t|
+  create_table "chats", primary_key: ["token", "number"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "token", null: false
     t.integer "number", default: 1, null: false
     t.integer "messages_number", default: 0, null: false
@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_220946) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "messages", primary_key: ["token", "chat_number", "number"], charset: "utf8mb4", force: :cascade do |t|
+  create_table "messages", primary_key: ["token", "chat_number", "number"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "token", null: false
     t.integer "chat_number", null: false
     t.integer "number", default: 1, null: false

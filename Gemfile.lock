@@ -80,9 +80,22 @@ GEM
     debug (1.6.3)
       irb (>= 1.3.6)
       reline (>= 0.3.1)
+    elastic-transport (8.1.0)
+      faraday (< 3)
+      multi_json
+    elasticsearch (8.5.2)
+      elastic-transport (~> 8)
+      elasticsearch-api (= 8.5.2)
+    elasticsearch-api (8.5.2)
+      multi_json
     erubi (1.11.0)
+    faraday (2.7.1)
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (3.0.2)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     io-console (0.5.11)
@@ -98,6 +111,7 @@ GEM
     mini_mime (1.1.2)
     minitest (5.16.3)
     msgpack (1.6.0)
+    multi_json (1.15.0)
     mysql2 (0.5.4)
     net-imap (0.3.1)
       net-protocol
@@ -146,6 +160,10 @@ GEM
     rbtree (0.4.5)
     reline (0.3.1)
       io-console (~> 0.5)
+    ruby2_keywords (0.0.5)
+    searchkick (5.1.0)
+      activemodel (>= 5.2)
+      hashie
     set (1.0.3)
     sorted_set (1.0.3)
       rbtree
@@ -167,9 +185,11 @@ DEPENDENCIES
   bunny (~> 2.19)
   composite_primary_keys (~> 14.0, >= 14.0.4)
   debug
+  elasticsearch (~> 8.5, >= 8.5.2)
   mysql2 (~> 0.5)
   puma (~> 5.0)
   rails (~> 7.0.4)
+  searchkick (~> 5.1)
   tzinfo-data
 
 RUBY VERSION

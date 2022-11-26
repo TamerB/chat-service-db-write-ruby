@@ -41,50 +41,54 @@ class RabbitMqServer < ApplicationController
     end
 
     def forward_action(value)
-        case value['action']
-        when 'application.create'
-            application = Application.new(value['params'])
-            if application.save
-                return {data: application, status: 201}
-            else
-                return {data: 'name is required', status: 400}
-            end
-        when 'application.update'
-            application = Application.find(value['params']['token'])
-            if application.update(value['params']['application'])
-                return {data: application, status: 200}
-            else
-                return {data: 'unprocessed entity', status: 422}
-            end
-        when 'chat.create'
-            application = Application.find(value['params'])
-            chat = Chat.new(token: application.token)
-            if chat.save
-                return {data: chat, status: 201}
-            else
-                return {data: 'token is required', status: 400}
-            end
-        when 'message.create'
-            chat = Chat.where(token: value['params']['application_token'], number: value['params']['chat_number']).first
-            if chat.nil?
-                return {data: "not found", status: 404}
-            else
-                message = Message.new(token: chat.token, chat_number: chat.number, body: value['params']['body'])
-                if message.save
-                    return {data: message, status: 201}
+        begin
+            case value['action']
+            when 'application.create'
+                application = Application.new(value['params'])
+                if application.save
+                    return {data: application, status: 201}
                 else
-                    return {data: 'one or more required field is missing', status: 400}
+                    return {data: 'name is required', status: 400}
                 end
-            end
-        when 'message.update'
-            message = Message.where(token: value['params']['application_token'], chat_number: value['params']['chat_number'], number: value['params']['number']).first
-            if message.update(value['params']['message'])
-                return {data: message, status: 200}
+            when 'application.update'
+                application = Application.find(value['params']['token'])
+                if application.update(value['params']['application'])
+                    return {data: application, status: 200}
+                else
+                    return {data: 'unprocessed entity', status: 422}
+                end
+            when 'chat.create'
+                application = Application.find(value['params'])
+                chat = Chat.new(token: application.token)
+                if chat.save
+                    return {data: chat, status: 201}
+                else
+                    return {data: 'token is required', status: 400}
+                end
+            when 'message.create'
+                chat = Chat.where(token: value['params']['application_token'], number: value['params']['chat_number']).first
+                if chat.nil?
+                    return {data: "not found", status: 404}
+                else
+                    message = Message.new(token: chat.token, chat_number: chat.number, body: value['params']['body'])
+                    if message.save
+                        return {data: message, status: 201}
+                    else
+                        return {data: 'one or more required field is missing', status: 400}
+                    end
+                end
+            when 'message.update'
+                message = Message.where(token: value['params']['application_token'], chat_number: value['params']['chat_number'], number: value['params']['number']).first
+                if message.update(value['params']['message'])
+                    return {data: message, status: 200}
+                else
+                    return {data: 'unprocessed entity', status: 422}
+                end
             else
-                return {data: 'unprocessed entity', status: 422}
+                return {data: 'unrecognized operation', status: 400}
             end
-        else
-            return {data: 'unrecognized operation', status: 400}
+        rescue Exception
+            return {data: 'something went wrong', status: 500}
         end
     end
 end
