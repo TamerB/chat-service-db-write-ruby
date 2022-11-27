@@ -54,5 +54,3 @@ begin
 rescue Interrupt => _
     server.stop
 end
-
-Message.reindex
