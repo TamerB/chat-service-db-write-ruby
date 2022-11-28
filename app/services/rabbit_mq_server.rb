@@ -1,7 +1,7 @@
 class RabbitMqServer < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: -> {return {data: 'not found', status: 404}}
     def initialize
-        @connection = Bunny.new
+        @connection = Bunny.new(host: ENV.fetch('MQ_HOST'), automatically_recover: false)
         @connection.start
         @channel = @connection.create_channel
     end

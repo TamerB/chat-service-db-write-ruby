@@ -42,7 +42,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
 
-$connection = Bunny.new
+$connection = Bunny.new(host: ENV.fetch('MQ_HOST'), automatically_recover: false)
 $connection.start
 $channel = $connection.create_channel
 
