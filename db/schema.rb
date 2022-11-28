@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_220946) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "messages", primary_key: ["token", "chat_number", "number"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "token", null: false
     t.integer "chat_number", null: false
     t.integer "number", default: 1, null: false
@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_220946) do
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["token", "chat_number"], name: "index_messages_on_token_and_chat_number"
+    t.index ["token", "chat_number", "number"], name: "index_messages_on_token_and_chat_number_and_number"
   end
 
   add_foreign_key "chats", "applications", column: "token", primary_key: "token", on_delete: :cascade

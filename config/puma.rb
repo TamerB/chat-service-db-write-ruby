@@ -46,11 +46,13 @@ $connection = Bunny.new(host: ENV.fetch('MQ_HOST'), automatically_recover: false
 $connection.start
 $channel = $connection.create_channel
 
-begin
-    server = RabbitMqServer.new
-    puts ' [x] Awaiting RPC requests'
-    server.start('write_queue')
-    server.loop_forever
-rescue Interrupt => _
-    server.stop
+Thread.new do
+    begin
+        server = RabbitMqServer.new
+        puts ' [x] Awaiting RPC requests'
+        server.start('write_queue')
+        server.loop_forever
+    rescue Interrupt => _
+        server.stop
+    end
 end
