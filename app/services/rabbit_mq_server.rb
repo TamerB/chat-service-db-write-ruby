@@ -58,7 +58,8 @@ class RabbitMqServer < ApplicationController
                     return {data: 'unprocessed entity', status: 422}
                 end
             when 'chat.create'
-                application = Application.find(value['params'])
+                application = Application.where(token: value['params']).first
+                return {data: 'application not found', status: 404} if application.nil?
                 chat = Chat.new(token: application.token)
                 if chat.save
                     return {data: chat, status: 201}
@@ -67,18 +68,16 @@ class RabbitMqServer < ApplicationController
                 end
             when 'message.create'
                 chat = Chat.where(token: value['params']['application_token'], number: value['params']['chat_number']).first
-                if chat.nil?
-                    return {data: "not found", status: 404}
+                return {data: "not found", status: 404} if chat.nil?
+                message = Message.new(token: chat.token, chat_number: chat.number, body: value['params']['body'])
+                if message.save
+                    return {data: message, status: 201}
                 else
-                    message = Message.new(token: chat.token, chat_number: chat.number, body: value['params']['body'])
-                    if message.save
-                        return {data: message, status: 201}
-                    else
-                        return {data: 'one or more required field is missing', status: 400}
-                    end
+                    return {data: 'one or more required field is missing', status: 400}
                 end
             when 'message.update'
                 message = Message.where(token: value['params']['application_token'], chat_number: value['params']['chat_number'], number: value['params']['number']).first
+                return {data: "not found", status: 404} if message.nil?
                 if message.update(value['params']['message'])
                     return {data: message, status: 200}
                 else
@@ -87,7 +86,7 @@ class RabbitMqServer < ApplicationController
             else
                 return {data: 'unrecognized operation', status: 400}
             end
-        rescue Exception
+        rescue Exception => e
             return {data: 'something went wrong', status: 500}
         end
     end
