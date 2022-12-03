@@ -72,9 +72,11 @@ Database username for production
 Database password for production
 
 ## Build Docker image
+From the project's root directory, run the following command in terminal
 ```
 docker build -t chat-writer:latest .
 ```
+If you change the docker image name or tag, you will need to change them in `docker-compose.yml` too.
 
 ## Test
 To run tests, from the project's root directory, run `rails test ./...` in terminal.
