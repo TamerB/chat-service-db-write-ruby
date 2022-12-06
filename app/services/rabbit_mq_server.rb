@@ -44,7 +44,7 @@ class RabbitMqServer < ApplicationController
         begin
             case value['action']
             when 'application.create'
-                application = Application.new(value['params'])
+                application = Application.new(name: value['params']['name'])
                 if application.save
                     return {data: application, status: 201}
                 else
@@ -87,6 +87,7 @@ class RabbitMqServer < ApplicationController
                 return {data: 'unrecognized operation', status: 400}
             end
         rescue Exception => e
+            puts e.message
             return {data: 'something went wrong', status: 500}
         end
     end
