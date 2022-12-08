@@ -81,6 +81,6 @@ If you change the docker image name or tag, you will need to change them in `doc
 ## Test
 To run tests, from the project's root directory, run `rails test ./...` in terminal.
 
-## Notes
+#### Notes
 - This service uses MySQL for development and production. And uses Sqlite for testing.
 - When testing [chat service](https://github.com/TamerB/chat-service-ruby), you will need to run this service. Please make sure to use a testing MySQL database in production or use Sqlite by modifying `config/database.yml`.
