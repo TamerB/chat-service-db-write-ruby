@@ -39,7 +39,7 @@ class RabbitMqServerTest < ActiveSupport::TestCase
     end
   end
 
-  test 'shoud messages 5 different chats' do
+  test 'shoud create 5 different messages' do
     begin
       server = RabbitMqServer.new
       concurrency_level = 5
